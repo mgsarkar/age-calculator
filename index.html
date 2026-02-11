@@ -2,44 +2,65 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Government Age Calculator</title>
+<title>Govt Age Calculator</title>
 
 <style>
+/* 🌤️ Light Blue Animated Background */
 body {
     font-family: Arial;
-    background: #f2f2f2;
-    text-align: center;
-    padding-top: 30px;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(-45deg, #e3f2fd, #bbdefb, #e1f5fe, #b3e5fc);
+    background-size: 400% 400%;
+    animation: bgMove 12s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+/* Background animation */
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Calculator Box */
 .box {
     background: white;
-    padding: 20px;
+    padding: 22px;
     width: 380px;
-    margin: auto;
-    border-radius: 10px;
-    box-shadow: 0 0 10px gray;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    text-align: center;
+    animation: fadeIn 1s ease-in;
+}
+
+/* Box animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 button {
     margin-top: 12px;
     padding: 8px 16px;
     font-size: 15px;
+    background: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-/* Confetti */
-.confetti {
-    position: fixed;
-    width: 8px;
-    height: 8px;
-    top: -10px;
-    animation: fall 3s linear infinite;
-}
-
-@keyframes fall {
-    to {
-        transform: translateY(100vh) rotate(360deg);
-    }
+button:hover {
+    background: #1976d2;
 }
 </style>
 </head>
@@ -79,8 +100,8 @@ function calculateAge() {
 
     if (days < 0) {
         months--;
-        var prevMonth = new Date(asOnDate.getFullYear(), asOnDate.getMonth(), 0);
-        days += prevMonth.getDate();
+        var pm = new Date(asOnDate.getFullYear(), asOnDate.getMonth(), 0);
+        days += pm.getDate();
     }
 
     if (months < 0) {
@@ -91,29 +112,6 @@ function calculateAge() {
     document.getElementById("result").innerHTML =
         "<b>Age As On " + asOn + ":</b><br>" +
         years + " Years " + months + " Months " + days + " Days";
-
-    // 🎊 Birthday Confetti
-    if (
-        birthDate.getDate() === asOnDate.getDate() &&
-        birthDate.getMonth() === asOnDate.getMonth()
-    ) {
-        startConfetti();
-    }
-}
-
-// Confetti function
-function startConfetti() {
-    for (let i = 0; i < 50; i++) {
-        let conf = document.createElement("div");
-        conf.className = "confetti";
-        conf.style.left = Math.random() * 100 + "vw";
-        conf.style.backgroundColor =
-            "hsl(" + Math.random() * 360 + ",100%,50%)";
-        conf.style.animationDuration = (Math.random() * 3 + 2) + "s";
-        document.body.appendChild(conf);
-
-        setTimeout(() => conf.remove(), 5000);
-    }
 }
 </script>
 
