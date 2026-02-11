@@ -2,136 +2,219 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Advanced Age Calculator</title>
+<title>mgsarkar</title>
 
 <style>
 body {
-    font-family: Arial;
-    min-height: 100vh;
     margin: 0;
-    background: linear-gradient(-45deg, #e3f2fd, #bbdefb, #e1f5fe);
-    background-size: 400% 400%;
-    animation: bgMove 12s ease infinite;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    font-family: Arial;
+    background: #f4f6fb;
 }
 
-@keyframes bgMove {
-    0% {background-position: 0% 50%;}
-    50% {background-position: 100% 50%;}
-    100% {background-position: 0% 50%;}
-}
-
-.box {
-    background: white;
-    padding: 22px;
-    width: 400px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+/* HEADER */
+header {
+    background: #6a5acd;
+    color: white;
+    padding: 15px;
     text-align: center;
 }
 
-button {
-    margin-top: 12px;
-    padding: 8px 16px;
-    font-size: 15px;
-    background: #2196f3;
-    color: white;
+nav button {
+    background: white;
+    color: #6a5acd;
     border: none;
-    border-radius: 6px;
+    padding: 8px 15px;
+    margin: 5px;
     cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
-button:hover {
-    background: #1976d2;
+nav button:hover {
+    background: #ddd;
+}
+
+/* FOOTER */
+footer {
+    background: #6a5acd;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+/* SECTIONS */
+.section {
+    display: none;
+    padding: 30px;
+}
+
+.active {
+    display: block;
+}
+
+/* HOME */
+.home-box {
+    text-align: center;
+    padding: 80px;
+    color: #6a5acd;
+}
+
+/* CALCULATOR */
+.box {
+    background: white;
+    padding: 20px;
+    width: 400px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #aaa;
+    text-align: center;
+}
+
+/* RESUME */
+.resume-box {
+    background: white;
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+    box-shadow: 0 0 10px #aaa;
+    border-radius: 10px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 6px;
+    margin: 5px 0 10px;
+}
+
+button.action {
+    background: #6a5acd;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
-    <h2>Age Calculator</h2>
+<header>
+    <h1>mgsarkar</h1>
+    <nav>
+        <button onclick="showTab('home')">Home</button>
+        <button onclick="showTab('calculator')">Calculator</button>
+        <button onclick="showTab('resume')">Resume</button>
+    </nav>
+</header>
 
-    <label>Date of Birth:</label><br>
-    <input type="date" id="dob"><br><br>
-
-    <button onclick="startCalculation()">Calculate Age</button>
-
-    <p id="ageResult"></p>
-    <p id="timeResult"></p>
-    <p id="birthdayResult"></p>
+<!-- HOME -->
+<div id="home" class="section active">
+    <div class="home-box">
+        <h1>Welcome to <span style="color:#9c27b0;">mgsarkar</span></h1>
+        <p>Age Calculator & Resume Maker Platform</p>
+    </div>
 </div>
 
-<script>
-let timer;
+<!-- CALCULATOR -->
+<div id="calculator" class="section">
+    <div class="box">
+        <h2>Age Calculator</h2>
+        <input type="date" id="dob">
+        <button class="action" onclick="startCalculation()">Calculate</button>
 
+        <p id="ageResult"></p>
+        <p id="timeResult"></p>
+        <p id="birthdayResult"></p>
+    </div>
+</div>
+
+<!-- RESUME -->
+<div id="resume" class="section">
+    <div class="resume-box" id="resumeContent">
+        <h2>Resume Maker</h2>
+
+        <input placeholder="First Name">
+        <input placeholder="Second Name">
+        <input placeholder="Last Name">
+        <input placeholder="Father's Name">
+        <input placeholder="Mother's Name">
+        <input placeholder="Mobile Number">
+        <input placeholder="Email">
+
+        <textarea placeholder="Career Objective"></textarea>
+        <textarea placeholder="Education Qualification"></textarea>
+        <textarea placeholder="Key Skills"></textarea>
+        <textarea placeholder="Experience"></textarea>
+        <textarea placeholder="Declaration"></textarea>
+
+        <button class="action" onclick="downloadPDF()">Download PDF</button>
+    </div>
+</div>
+
+<footer>
+    © 2026 mgsarkar | All Rights Reserved
+</footer>
+
+<script>
+function showTab(tab) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+}
+
+/* AGE CALCULATOR */
+let timer;
 function startCalculation() {
     clearInterval(timer);
+    let dob = document.getElementById("dob").value;
+    if (!dob) return alert("Select DOB");
 
-    const dobValue = document.getElementById("dob").value;
-    if (dobValue === "") {
-        alert("Please select Date of Birth");
-        return;
-    }
+    let birthDate = new Date(dob);
 
-    const birthDate = new Date(dobValue);
+    function update() {
+        let now = new Date();
 
-    function updateAge() {
-        const now = new Date();
+        let y = now.getFullYear() - birthDate.getFullYear();
+        let m = now.getMonth() - birthDate.getMonth();
+        let d = now.getDate() - birthDate.getDate();
 
-        // Years Months Days
-        let years = now.getFullYear() - birthDate.getFullYear();
-        let months = now.getMonth() - birthDate.getMonth();
-        let days = now.getDate() - birthDate.getDate();
-
-        if (days < 0) {
-            months--;
-            let pm = new Date(now.getFullYear(), now.getMonth(), 0);
-            days += pm.getDate();
+        if (d < 0) {
+            m--;
+            d += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
         }
-        if (months < 0) {
-            years--;
-            months += 12;
+        if (m < 0) {
+            y--; m += 12;
         }
 
         document.getElementById("ageResult").innerHTML =
-            "<b>Age:</b> " + years + " Years " + months + " Months " + days + " Days";
+            `<b>Age:</b> ${y} Years ${m} Months ${d} Days`;
 
-        // Total time lived
-        let diffMs = now - birthDate;
-        let totalSeconds = Math.floor(diffMs / 1000);
-        let totalMinutes = Math.floor(totalSeconds / 60);
-        let totalHours = Math.floor(totalMinutes / 60);
+        let diff = now - birthDate;
+        let sec = Math.floor(diff / 1000);
+        let min = Math.floor(sec / 60);
+        let hrs = Math.floor(min / 60);
 
         document.getElementById("timeResult").innerHTML =
-            "⏱️ <b>Total Time Lived:</b><br>" +
-            totalHours + " Hours | " +
-            totalMinutes + " Minutes | " +
-            totalSeconds + " Seconds";
+            `⏱ ${hrs} Hours | ${min} Minutes | ${sec} Seconds`;
 
-        // Next Birthday
-        let nextBirthday = new Date(
-            now.getFullYear(),
-            birthDate.getMonth(),
-            birthDate.getDate()
-        );
-
-        if (nextBirthday < now) {
-            nextBirthday.setFullYear(now.getFullYear() + 1);
-        }
-
-        let daysLeft = Math.ceil(
-            (nextBirthday - now) / (1000 * 60 * 60 * 24)
-        );
+        let next = new Date(now.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+        if (next < now) next.setFullYear(now.getFullYear() + 1);
+        let daysLeft = Math.ceil((next - now) / (1000*60*60*24));
 
         document.getElementById("birthdayResult").innerHTML =
-            "🎂 <b>Next Birthday In:</b> " + daysLeft + " Days";
+            `🎂 Next Birthday in ${daysLeft} Days`;
     }
 
-    updateAge();
-    timer = setInterval(updateAge, 1000); // live seconds update
+    update();
+    timer = setInterval(update, 1000);
+}
+
+/* PDF DOWNLOAD */
+function downloadPDF() {
+    window.print(); // browser → Save as PDF
 }
 </script>
 
